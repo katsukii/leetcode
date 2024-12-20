@@ -163,3 +163,51 @@ class Solution {
     }
 }
 ```
+
+> https://github.com/seal-azarashi/leetcode/pull/5/files#r1641826126
+> dummy を使わないこともできますね。(番兵とかいいます。)
+> この問題、番兵を使うか使わないかはあまり本質的ではないです。
+> 
+> 手でやるならばどうするか、仕事を複数人に依頼するならばどうするか、が見えていないのかなと思います。
+
+レビューコメントを受けて、dummy（番兵）を使わない方法も検討してみたところ以下の方法で解決した
+
+```java
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        
+        ListNode head = null, current = null;
+
+        int carry = 0;
+        while (l1 != null || l2 != null || carry != 0) {
+            int sum = carry;
+
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+
+            ListNode tail = new ListNode(sum % 10);
+
+            if (head == null) {
+                head = tail;
+                current = head;
+            } else {
+                current.next = tail;
+                current = current.next;
+            }
+
+            carry = sum / 10;
+        }
+
+        return head; 
+    }
+}
+```
+
+結果的に処理が増えたので、番兵を使った方がすっきり
