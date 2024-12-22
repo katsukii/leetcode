@@ -13,7 +13,7 @@ class Solution {
         ListNode sumNode = dummyNode;
 
         int carry = 0;
-        while(l1 != null || l2 != null) {
+        while (l1 != null || l2 != null) {
             int tempSum = carry;
             if (l1 != null) tempSum += l1.val;
             if (l2 != null) tempSum += l2.val;
