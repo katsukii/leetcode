@@ -131,6 +131,8 @@ class Solution {
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを3回連続できたら問題はOK。
 
+* コード自体は上記の int[] version と同一
+
 ```java
 class Solution {
     public int lengthOfLongestSubstring(String s) {
