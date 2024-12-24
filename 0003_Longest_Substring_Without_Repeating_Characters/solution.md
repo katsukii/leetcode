@@ -19,11 +19,9 @@
 ```java
 class Solution {
     public int lengthOfLongestSubstring(String s) {
-        
         int length = s.length();
         int longest = 0;
         for (int startInd = 0; startInd < length; startInd++) {
-            
             HashSet<Character> appeared = new HashSet<>();
             
             char start = s.charAt(startInd);
