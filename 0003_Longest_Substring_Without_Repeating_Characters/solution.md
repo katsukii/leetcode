@@ -153,3 +153,38 @@ class Solution {
     }
 }
 ```
+
+## レビュー後に新たに知った解法
+### ウィンドウの始端をジャンプさせずにインクリメントする方法
+
+> 自分が解いたときは、文字とその文字のウィンドウ内での出現回数を HashMap で記録しておき、出現回数が 0 回になるまで left をインクリメントしていきました。各文字の最後の出現位置を記録する方式のほうが、ポインターを一気に飛ばすことができ、処理が端折れてよいと思います。
+
+こちらのコメントをいただき知った解法。コメントにあるとおりポインターを一気に飛ばす方が効率が良い
+
+* 各文字の出現回数をHashMapに格納しながら、ウィンドウの終端を1文字ずつ進める。重複がなければその時点での最長のウィンドウサイズを変数に記録する
+    * このときHashMapには「現在のウィンドウに含まれる各文字の出現回数」を格納する
+* ウィンドウ内に重複が生じたら、HashMap内の文字カウントを減らしながら重複のない状態になるまで始端を進める
+
+
+``` java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character, Integer> charCount = new HashMap<>();
+        int left = 0, longest = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            char rightChar = s.charAt(right);
+            charCount.put(rightChar, charCount.getOrDefault(rightChar, 0) + 1);
+
+            while (charCount.get(rightChar) > 1) {
+                char leftChar = s.charAt(left);
+                charCount.put(leftChar, charCount.get(leftChar) - 1);
+                left++;
+            }
+
+            longest = Math.max(longest, right - left + 1);
+        }
+        return longest;
+    }
+}
+```
