@@ -31,6 +31,31 @@ class Solution {
 }
 ```
 
+### レビュー後の修正
+
+* `getOrDefault` というMapメソッドを教えていただいたのでそれを用いて修正
+    * https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html#getOrDefault-java.lang.Object-V-
+
+```java
+class Solution {
+    public int firstUniqChar(String s) {
+        HashMap<Character, Integer> charCounts = new HashMap<>();
+        
+        for (char c : s.toCharArray()) {
+            charCounts.put(c, charCounts.getOrDefault(c, 0) + 1);
+        }
+
+        int length = s.length();
+        for (int i = 0; i < length; i++) {
+            if (charCounts.get(s.charAt(i)) == 1) return i;
+        }
+
+        return -1;
+    }
+}
+```
+
+
 ## Step 2
 他の方が描いたコードを見て、参考にしてコードを書き直してみる。
 参考にしたコードのリンクは貼っておく。
@@ -109,6 +134,32 @@ class Solution {
 * https://github.com/tarinaihitori/leetcode/pull/15
 * https://github.com/ryoooooory/LeetCode/pull/20
 
+### レビュー後の修正点
+* マジックナンバーのため定数を定義
+* 不要なスペースを除去
+
+```java
+class Solution {
+    private static final int NUM_LOWERCASE = 'z' - 'a' + 1;
+    public int firstUniqChar(String s) {
+        int[] charCounts = new int[NUM_LOWERCASE];
+
+        int length = s.length();
+        for (int i = 0; i < length; i++) {
+            charCounts[s.charAt(i) - 'a']++;
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (charCounts[s.charAt(i) - 'a'] == 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+
 ## Step 3
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを3回連続できたら問題はOK。
@@ -130,7 +181,6 @@ class Solution {
                 return i;
             }
         }
-
         return -1;
     }
 }
