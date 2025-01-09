@@ -13,8 +13,11 @@
 
 ### 試行1 HashSetに格納する方法
 
-時間計算量: O(n^2)
+時間計算量: O(n*k)
 動作はするものの、LeetCode上でのパフォーマンスはかなり低い
+
+* [追記] indは伝わらないため、indexときちんと書く方がベター
+    * https://github.com/katsukii/leetcode/pull/5/files#r1905044931
 
 ```java
 class Solution {
@@ -130,6 +133,8 @@ class Solution {
 アクセプトされたら消すを3回連続できたら問題はOK。
 
 * コード自体は上記の int[] version と同一
+* [追記] 以下のコードに対し空行の多さを指摘されたため、注意する
+    * https://github.com/katsukii/leetcode/pull/5/files#r1905046989
 
 ```java
 class Solution {
@@ -137,7 +142,8 @@ class Solution {
         int[] lastIndex = new int[256];
         for (int i = 0; i < 256; i++) lastIndex[i] = -1;
 
-        int length = s.length(), left = 0, longest = 0;
+        int length = s.length();
+        int left = 0, longest = 0;
 
         for (int right = 0; right < length; right++) {
             char currentChar = s.charAt(right); 
