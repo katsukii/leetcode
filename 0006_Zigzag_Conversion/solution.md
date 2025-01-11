@@ -104,8 +104,63 @@ class Solution {
         for (char c : s.toCharArray()) {
             if (rows[row] == null) rows[row] = new StringBuilder();
             rows[row].append(c);
-            row = goingDown ? row + 1 : row - 1;
+            if (goingDown) {
+                row++;
+            } else {
+                row--;
+            }
             if (row == 0 || row == numRows - 1) goingDown = !goingDown;
+        }
+
+        StringBuilder result = new StringBuilder(length);
+        for (StringBuilder sb : rows) result.append(sb);
+
+        return result.toString();
+    }
+}
+```
+
+#### レビュアーからのコメント
+* `row = goingDown ? row + 1 : row - 1;` とするなら `row += goingDown ? 1 : -1;` と書ける。また、if elseで書く方法、direction変数を作って1か-1を入れるのも手
+    ```java
+    // if else pattern
+    if (goingDown) {
+        row++;
+    } else {
+        row--;
+    }
+    ```
+    ```java
+    // direction variable pattern
+    int direction = 1;
+    row += direction;
+    if (row == 0) {
+        direction = 1;
+    } else if (row == numRows - 1) {
+        direction = -1;
+    }
+    ```
+
+上記を受けて directionパターンを実装してみる
+
+```java
+class Solution {
+    public String convert(String s, int numRows) {
+        int length = s.length();
+        if (length <= numRows || numRows <= 1) return s;
+        
+        StringBuilder[] rows = new StringBuilder[numRows];
+        int row = 0;
+        int direction = 1;
+        for (char c : s.toCharArray()) {
+            if (rows[row] == null) rows[row] = new StringBuilder();
+            rows[row].append(c);
+            row += direction;
+            if (row == 0) {
+                direction = 1;
+            } else if (row == numRows - 1) {
+                direction = -1;
+            }
         }
 
         StringBuilder result = new StringBuilder(length);
@@ -122,6 +177,9 @@ class Solution {
     * `int cycleLength = 2 * numRows - 2;`
     * ex) numRows = 3 であれば1サイクル4
 * ジグザグの往路における行番号は文字位置をサイクル長で割った余り(i % cycleLength), 復路はさらにそれをサイクル長から引いたものとなる
+* （rowsとrowの両方がある今回の場合）個人的にはrowという名前はrowsの要素に見えるのでindexとして使うのは少しだけ抵抗がありました。jとかでも十分かもしれません
+
+
 
 ```java
 class Solution {
@@ -133,10 +191,10 @@ class Solution {
         int cycleLength = numRows * 2 - 2;
         
         for (int i = 0; i < length; i++) {
-            int row = i % cycleLength;
-            if (row >= numRows) row = cycleLength - row;
-            if (rows[row] == null) rows[row] = new StringBuilder();
-            rows[row].append(s.charAt(i));
+            int rowIndex = i % cycleLength;
+            if (rowIndex >= numRows) rowIndex = cycleLength - rowIndex;
+            if (rows[rowIndex] == null) rows[rowIndex] = new StringBuilder();
+            rows[rowIndex].append(s.charAt(i));
         }
 
         StringBuilder result = new StringBuilder(length);
