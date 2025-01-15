@@ -56,7 +56,7 @@ class Solution {
 他の解法も考えみる。
 
 ### 解き方のパターン
-#### 1. 文字列を1ずつ解析する方法
+#### 1. 文字列を1つずつ解析する方法
 * Step1で実施した方法だが、一回のループで全文字を走査しようとすると状態管理フラグが多くなり煩雑になってしまう。そのためループを複数に分け、走査中の文字位置（index）を前のループから引き継ぐという方法をとることで状態管理を減らすことができる
 * これによりネストが深くならず、フラグも減らせるため認知負荷が高くなることを避けられる
 
@@ -133,6 +133,40 @@ class Solution {
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを3回連続できたら問題はOK。
 
-```java
+* 方法1を選択
 
+```java
+public class Solution {
+    public int myAtoi(String s) {
+        if (s == null || s.isEmpty()) return 0;
+
+        int length = s.length();
+        int index = 0;
+        int sign = 1;
+        int result = 0;
+
+        // Step 1: Skip leading spaces
+        while (index < length && s.charAt(index) == ' ') index++;
+
+        // Step 2: Check for sign
+        if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
+            sign = (s.charAt(index) == '-') ? -1 : 1;
+            index++;
+        }
+
+        // Step 3: Parse digits and build result
+        while (index < length && Character.isDigit(s.charAt(index))) {
+            int digit = s.charAt(index) - '0';
+
+            // Check for overflow before adding the digit
+            if (result > (Integer.MAX_VALUE - digit) / 10) {
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            result = result * 10 + digit;
+            index++;
+        }
+
+        return result * sign;
+    }
+}
 ```
