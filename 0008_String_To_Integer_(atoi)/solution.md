@@ -56,7 +56,7 @@ class Solution {
 他の解法も考えみる。
 
 ### 解き方のパターン
-#### 1. 文字列を1つずつ解析する方法
+#### 1-1. 文字列を1つずつ解析する方法
 * Step1で実施した方法だが、一回のループで全文字を走査しようとすると状態管理フラグが多くなり煩雑になってしまう。そのためループを複数に分け、走査中の文字位置（index）を前のループから引き継ぐという方法をとることで状態管理を減らすことができる
 * これによりネストが深くならず、フラグも減らせるため認知負荷が高くなることを避けられる
 
@@ -96,6 +96,50 @@ public class Solution {
 }
 ```
 
+#### 1-2. multiplyExact, addExactを用いるパターン
+* レビューコメントにて、multiplyExact, addExactというメソッドを教えてもらった
+    * https://github.com/katsukii/leetcode/pull/9/files#r1919816731
+* 2つのint型数値の積、和を求め、int型からオーバーフローした際に例外を投げるというもの
+* 計算の際にオーバーフローする条件を自分で求める必要がなくなる
+* ただし、例外処理はif文よりも処理が重いためパフォーマンスはよくない
+
+```java
+public class Solution {
+    public int myAtoi(String s) {
+        if (s == null || s.isEmpty()) return 0;
+
+        int length = s.length();
+        int index = 0;
+        int sign = 1;
+        int result = 0;
+
+        // Step 1: Skip leading spaces
+        while (index < length && s.charAt(index) == ' ') index++;
+
+        // Step 2: Check for sign
+        if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
+            sign = (s.charAt(index) == '-') ? -1 : 1;
+            index++;
+        }
+
+        // Step 3: Parse digits and build result
+        while (index < length && Character.isDigit(s.charAt(index))) {
+            int digit = s.charAt(index) - '0';
+            
+            // calculate the digit
+            try {
+                result = Math.addExact(Math.multiplyExact(result, 10), digit);
+            } catch (ArithmeticException e) {
+                if (sign == -1) return Integer.MIN_VALUE;
+                return Integer.MAX_VALUE;
+            }
+            index++;
+        }
+
+        return result * sign;
+    }
+}
+```
 
 #### 2. 正規表現を使う方法
 * 正規表現を使用して文字列から有効な部分だけを抽出する方法
