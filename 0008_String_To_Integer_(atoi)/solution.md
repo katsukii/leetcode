@@ -64,22 +64,21 @@ class Solution {
 public class Solution {
     public int myAtoi(String s) {
         if (s == null || s.isEmpty()) return 0;
-
+        
+        // Step 1: Skip leading spaces
         int length = s.length();
         int index = 0;
-        int sign = 1;
-        int result = 0;
-
-        // Step 1: Skip leading spaces
         while (index < length && s.charAt(index) == ' ') index++;
 
         // Step 2: Check for sign
+        int sign = 1;
         if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
             sign = (s.charAt(index) == '-') ? -1 : 1;
             index++;
         }
 
         // Step 3: Parse digits and build result
+        int result = 0;
         while (index < length && Character.isDigit(s.charAt(index))) {
             int digit = s.charAt(index) - '0';
 
@@ -108,21 +107,20 @@ public class Solution {
     public int myAtoi(String s) {
         if (s == null || s.isEmpty()) return 0;
 
+        // Step 1: Skip leading spaces
         int length = s.length();
         int index = 0;
-        int sign = 1;
-        int result = 0;
-
-        // Step 1: Skip leading spaces
         while (index < length && s.charAt(index) == ' ') index++;
 
         // Step 2: Check for sign
+        int sign = 1;
         if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
             sign = (s.charAt(index) == '-') ? -1 : 1;
             index++;
         }
 
         // Step 3: Parse digits and build result
+        int result = 0;
         while (index < length && Character.isDigit(s.charAt(index))) {
             int digit = s.charAt(index) - '0';
             
@@ -186,13 +184,13 @@ public class Solution {
 
         int length = s.length();
         int index = 0;
-        int sign = 1;
         int result = 0;
 
         // Step 1: Skip leading spaces
         while (index < length && s.charAt(index) == ' ') index++;
 
         // Step 2: Check for sign
+        int sign = 1;
         if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
             sign = (s.charAt(index) == '-') ? -1 : 1;
             index++;
