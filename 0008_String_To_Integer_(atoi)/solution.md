@@ -181,12 +181,10 @@ class Solution {
 public class Solution {
     public int myAtoi(String s) {
         if (s == null || s.isEmpty()) return 0;
-
+        
+        // Step 1: Skip leading spaces
         int length = s.length();
         int index = 0;
-        int result = 0;
-
-        // Step 1: Skip leading spaces
         while (index < length && s.charAt(index) == ' ') index++;
 
         // Step 2: Check for sign
@@ -197,6 +195,7 @@ public class Solution {
         }
 
         // Step 3: Parse digits and build result
+        int result = 0;
         while (index < length && Character.isDigit(s.charAt(index))) {
             int digit = s.charAt(index) - '0';
 
