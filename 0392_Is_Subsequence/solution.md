@@ -56,9 +56,8 @@ class Solution {
         int sIndex = 0;
         int tIndex = 0;
         int sLength = s.length();
-        int tLength = t.length();
 
-        while (sIndex < sLength && tIndex < tLength) {
+        while (sIndex < sLength && tIndex < t.length()) {
             if (s.charAt(sIndex) == t.charAt(tIndex)) sIndex++;
             tIndex++;
         }
@@ -75,18 +74,19 @@ class Solution {
     public boolean isSubsequence(String s, String t) {
         int sIndex = 0;
         int tIndex = 0;
-        int sLength = s.length();
-        int tLength = t.length();
-
         while (true) {
-            if (sLength > 0 && tLength > 0 && s.charAt(sIndex) == t.charAt(tIndex)) sIndex++;
-            if (tLength > 0) tIndex++;
-            if (sIndex == sLength) return true;
-            if (tIndex == tLength) return false;
+            if (sIndex == s.length()) return true;
+            if (tIndex == t.length()) return false;
+            if (s.charAt(sIndex) == t.charAt(tIndex)) sIndex++;
+            tIndex++;
         }
     }
 }
 ```
+
+### レビュー後に学んだこと
+* 状況によるが、オーバーヘッドよりも認知負荷軽減を優先した方がよい場合がある。今回のケースでは、 `s.length()` をわざわざ変数格納しても節約できるオーバーヘッドは一回あたり数クロック、ナノ秒のオーダー。それよりも、変数を負い続けるコストの方が高いという判断
+    * https://github.com/katsukii/leetcode/pull/10#discussion_r1921489698
 
 ## Step 3
 今度は、時間を測りながら、もう一回書く。
@@ -97,14 +97,11 @@ class Solution {
     public boolean isSubsequence(String s, String t) {
         int sIndex = 0;
         int tIndex = 0;
-        int sLength = s.length();
-        int tLength = t.length();
-
-        while (sIndex < sLength && tIndex < tLength) {
+        while (sIndex < s.length() && tIndex < t.length()) {
             if (s.charAt(sIndex) == t.charAt(tIndex)) sIndex++;
             tIndex++;
         }
-        return sIndex == sLength;
+        return sIndex == s.length();
     }
 }
 ```
