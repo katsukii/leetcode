@@ -1,5 +1,5 @@
 ## Problem
-// The URL of the problem
+https://leetcode.com/problems/word-break/
 
 ## Step 1
 5分程度答えを見ずに考えて、手が止まるまでやってみる。
@@ -126,11 +126,12 @@ class Solution {
 * 各ノードは1文字を表し、ノード間のエッジが文字列の構成を示す
     * ※ 複数文字を表すパターンも存在する
     * 例えば "cat" と "cats" を保存する場合、接頭部分 "cat" を共有し余分なメモリを節約する
-    ````
+    ```
     c - a - t (isWordEnd=true)
              \
               s (isWordEnd=true)
-    ````
+    ```
+
 * 基本的な機能としては挿入と検索の2つ。挿入時はノードを1文字ずつたどり存在しなければ新しく作成する。検索時も同様に一文字ずつ文字列の末尾までノードをたどり、最後のノードが終了フラグを持っているか確認する
 * 以下、putWordsToTrieメソッドが挿入に、checkメソッドが検索に該当。checkメソッドでは、現在のindexから始まる部分文字列を探索しながら、すでに計算した結果をdpマップで再利用することで再帰の深さを抑えている
 * 処理の流れとしては、putWordsToTrieでwordDictのトライ木を構築し、そのあとcheckで文字列sをトライ木のrootから順に探索。分割可能ならtrueを、そうでなければfalseをdpBreakabilityに格納する。最終的にcheck(s, 0)の結果をreturnする
