@@ -316,3 +316,28 @@ class Solution {
     }
 }
 ```
+
+レビューを受けて、ボトムアップDPを再選択
+
+```java
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] dpBreakability = new boolean[s.length() + 1];
+        dpBreakability[0] = true;
+
+        for (int start = 0; start < s.length(); start++) {
+            if (!dpBreakability[start]) {
+                continue;
+            }
+
+            for (String word : wordDict) {
+                if (s.startsWith(word, start)) {
+                    dpBreakability[start + word.length()] = true;
+                }
+            }
+        }
+
+        return dpBreakability[s.length()];
+    }
+}
+```
