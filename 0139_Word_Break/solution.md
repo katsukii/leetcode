@@ -68,27 +68,56 @@ class Solution {
 
 ```java
 class Solution {
-    public int checkBreakability(String s, List<String> wordDict, int start, int[] dpBreakability) {
+    final int UNVISITED = -1;
+    final int UNBREAKABLE = 0;
+    final int BREAKABLE = 1;
 
-        if (start == s.length()) return 1; // Base case
-        if (dpBreakability[start] != -1) return dpBreakability[start]; // Memorized case
+    public int checkBreakability(String s, List<String> wordDict, int start, int[] dpBreakability) {
+        if (start == s.length()) return BREAKABLE; // Base case
+        if (dpBreakability[start] != UNVISITED) return dpBreakability[start]; // Memorized case
         
         for (String word : wordDict) {
             int end = start + word.length();
             if ((end <= s.length()) && s.regionMatches(start, word, 0, word.length())) {
-                if (checkBreakability(s, wordDict, end, dpBreakability) == 1) {
-                    return 1; // Breakable
+                if (checkBreakability(s, wordDict, end, dpBreakability) == BREAKABLE) {
+                    return BREAKABLE; // Breakable
                 }
             }
         }
 
-        return dpBreakability[start] = 0; // Not breakable
+        return dpBreakability[start] = UNBREAKABLE;
     }
 
     public boolean wordBreak(String s, List<String> wordDict) {
         int[] dpBreakability = new int[s.length() + 1];
-        for (int i = 0; i <= s.length(); i++) dpBreakability[i] = -1; // -1 means unchecked
-        return checkBreakability(s, wordDict, 0, dpBreakability) == 1;
+        for (int i = 0; i <= s.length(); i++) dpBreakability[i] = UNVISITED;
+        return checkBreakability(s, wordDict, 0, dpBreakability) == BREAKABLE;
+    }
+}
+```
+
+以下は `dpBreakability` をBool値で管理できるようにHashMap型に変更した方法
+
+```java
+class Solution {
+    public boolean checkBreakability(String s, List<String> wordDict, int start, HashMap breakabilityMap) {
+        if (start == s.length()) return true; // Base case
+        if (breakabilityMap.containsKey(start)) return false; // Memorized case
+        
+        for (String word : wordDict) {
+            int end = start + word.length();
+            if ((end <= s.length()) && s.regionMatches(start, word, 0, word.length())) {
+                if (checkBreakability(s, wordDict, end, breakabilityMap)) return true;
+            }
+        }
+
+        breakabilityMap.put(start, false);
+        return false; // Not breakable
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashMap breakabilityMap = new HashMap<Integer, Boolean>();
+        return checkBreakability(s, wordDict, 0, breakabilityMap);
     }
 }
 ```
