@@ -151,6 +151,33 @@ class Solution {
 }
 ```
 
+* startsWith()というメソッドを使う方法も教わった
+* こちらは認知不可が低いことに加え、パフォーマンスが上記コードよりも高い
+    * 上記コードの計算量がO(len(s)^2)であるのに対し、以下はO(len(s) * len(wordDict))
+
+```java
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        boolean[] dpBreakability = new boolean[s.length() + 1];
+        dpBreakability[0] = true;
+
+        for (int start = 0; start < s.length(); start++) {
+            if (!dpBreakability[start]) {
+                continue;
+            }
+
+            for (String word : wordDict) {
+                if (s.startsWith(word, start)) {
+                    dpBreakability[start + word.length()] = true;
+                }
+            }
+        }
+
+        return dpBreakability[s.length()];
+    }
+}
+```
+
 ### 解法3. Trie（トライ木）+ DP
 * トライ木とは文字列検索用のデータ構造。文字列の先頭部分(prefix)の共通部分を木構造の形で共有&保存することでO(N)での検索を可能にする（Nは検索文字列の長さ）というコンセプト
 * 各ノードは1文字を表し、ノード間のエッジが文字列の構成を示す
