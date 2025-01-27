@@ -172,39 +172,32 @@ c - a - t (isWordEnd=true)
 class Trie{
     public Trie[] next = new Trie[26];
     public boolean isWordEnd = false;
-    public Trie(){}
-}
-
-class Solution {
     
-    private Trie trie = new Trie();
-    HashMap<Integer, Boolean> dpBreakability = new HashMap<Integer,Boolean>();
-    
-    private void putWordsToTrie(List<String> words) {
-        for(String word : words){
-            Trie current = trie;
-            for(int i= 0 ; i < word.length(); i++){
-                if(current.next[word.charAt(i) - 'a'] == null) {
-                    current.next[word.charAt(i) - 'a'] = new Trie();
-                }
-                current = current.next[word.charAt(i) - 'a'] ;
+    public void addWord(String word) {
+        Trie current = this;
+        for(int i= 0 ; i < word.length(); i++){
+            int index = word.charAt(i) - 'a';
+            if(current.next[index] == null) {
+                current.next[index] = new Trie();
             }
-            current.isWordEnd = true;
+            current = current.next[index] ;
         }
+        current.isWordEnd = true;
     }
     
-    private boolean check(String s, int currentIndex) {
+    public boolean match(String s, int currentIndex, HashMap<Integer, Boolean> dpBreakability) {
         if (currentIndex == s.length()) return true;
         if (dpBreakability.containsKey(currentIndex)) {
             return dpBreakability.get(currentIndex);
         }
 
-        Trie current = trie;
+        Trie current = this;
         boolean result = false;
         for (int i = currentIndex; i < s.length(); ++i) {
-            if (current.next[s.charAt(i) - 'a'] == null) break;
-            current = current.next[s.charAt(i) - 'a'];
-            if (current.isWordEnd && check(s, i + 1)) {
+            int index = s.charAt(i) - 'a';
+            if (current.next[index] == null) break;
+            current = current.next[index];
+            if (current.isWordEnd && match(s, i + 1, dpBreakability)) {
                 result = true;
                 break;
             }
@@ -212,12 +205,17 @@ class Solution {
         dpBreakability.put(currentIndex, result);
         return result;
     }
+}
+
+class Solution {
+    private Trie trie = new Trie();
 
     public boolean wordBreak(String s, List<String> wordDict) {
-        putWordsToTrie(wordDict);
-        return check(s, 0);
+        for (String word : wordDict) {
+            trie.addWord(word);
+        }
+        return trie.match(s, 0, new HashMap<>());
     }
-
 }
 ```
 
