@@ -48,7 +48,7 @@ public class Solution {
 * 1つ飛ばしで進むウサギ（fast）と1つずつ進む亀（slow）の2つのポインタを同時に同じリスト上を走らせると、サイクルがある場合必ずどこかのノードで合流するという考え方
     * https://en.wikipedia.org/wiki/Cycle_detection#Floyd's_tortoise_and_hare
 * 感想: 2つ走らせるという発想はなかった。時間をかけても自分でゼロから思いつくのは厳しいと思う。考え方のパターンとしてストックしたい
-
+* [追記]レビュアーからのコメントとして、この解法は科学手品のようなものなので自分で思いつけなくてもあまり気にしなくてよいとのこと。一方でStep1のSetを使った解法は思いつけて普通とのこと
 
 ```java
 public class Solution {
@@ -62,6 +62,28 @@ public class Solution {
             if (fast == slow) {
                 return true;
             }
+        }
+        return false;
+    }
+}
+```
+### 解法2. 訪問済NodeをSetに格納する方法
+* Step1 と同じものだが、current という命名がわかりづらいという事がたびたび議論になっているため、nodeに変更
+    * https://github.com/katsukii/leetcode/pull/12#discussion_r1932786013
+* また、変数名に型名を入れるのはよくないため、 visitedSet -> visitedNodes に変更
+
+```java
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode node = head;
+        HashSet<ListNode> visitedNodes = new HashSet<>();
+
+        while (node != null) {
+            if (visitedNodes.contains(node)) {
+                return true;
+            }
+            visitedNodes.add(node);
+            node = current.next;
         }
         return false;
     }
