@@ -61,6 +61,20 @@ public class Solution {
 
 * 感想: 科学手品として割り切りつつも、ロジックとして理解はしておきたいと思い腹落ちさせるのに2時間くらいかけてしまった。とても効率の悪いことをしている気がするのでもう少し時間の使い方を考えたい
 
+* 追記: こちらの考え方を教えてもらい非常に理解の助けになった
+    * https://discord.com/channels/1084280443945353267/1246383603122966570/1252209488815984710
+    > はい。2歩ずつ走るうさぎと1歩ずつ歩くかめが、ある地点でぶつかったとします。そこを衝突点と呼びましょう。衝突点が見つかったあとに、衝突点とスタート地点から1歩ずつうさぎとかめを歩かせて、衝突するところが、合流地点である、ということを理解したいということですね。
+    > 
+    > うさぎとかめは、衝突点で出会った後に、うさぎとかめは、いま来た道を戻るように言われました。うさぎもかめも同じ速さで1歩ずつ歩いて戻ります。このとき、うさぎは一周してから戻りますが、かめはそのまま戻ります。
+    > 
+    > かめがスタート地点に戻った時、うさぎはどこにいるでしょうか。実は、うさぎは衝突点にいます。なぜかというと、うさぎは倍速で走っているからです。スタート地点から衝突点を通って衝突点に到達するうさぎルートの長さは、スタートから衝突点に到達するかめルートの2倍だからです。
+    > 
+    > ところで、この戻っていく時、うさぎとかめは、衝突点から同じ速さで歩いて戻っているので、合流点までは一緒にいましたね。
+    > 
+    > さて、ここまでの話を動画にして逆回しにしてみましょう。
+    > 
+    > うさぎとかめは、それぞれ衝突点とスタート地点から同じ速さで後ろ向きに歩き始めます。そして、合流地点から一緒に後ろ向きに歩き始め、そして衝突点に到達します。
+
 ```java
 public class Solution {
     public ListNode detectCycle(ListNode head) {
@@ -86,6 +100,46 @@ public class Solution {
         }
 
         return fast;
+    }
+}
+```
+
+* 「わかりやすいコメントが入っているので、いっそのことその名前をつかって関数を用意してしまうのもありだと思います。」というコメントをいただいたため関数化してみた
+* Step2のfastの役割が変わったことが明確になり読みやすくなった気がする
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode meetingPoint = findMeetingPoint(head);
+        if (meetingPoint == null) return null;
+        return findCycleStart(head, meetingPoint);
+    }
+
+    // Step 1: Detect if there is a cycle and return the meeting point
+    private ListNode findMeetingPoint(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                return fast; // Meeting point
+            }
+        }
+        return null; // No cycle
+    }
+
+    // Step 2: Find the start of the cycle
+    private ListNode findCycleStart(ListNode head, ListNode meetingPoint) {
+        ListNode slow1 = head;
+        ListNode slow2 = meetingPoint;
+
+        while (slow1 != slow2) {
+            slow1 = slow1.next;
+            slow2 = slow2.next;
+        }
+        return slow1;
     }
 }
 ```
@@ -120,6 +174,43 @@ public class Solution {
         }
 
         return fast;
+    }
+}
+```
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode meetingPoint = findMeetingPoint(head);
+        if (meetingPoint == null) return null;
+        return findCycleStart(head, meetingPoint);
+    }
+
+    // Step 1: Detect if there is a cycle and return the meeting point
+    private ListNode findMeetingPoint(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                return fast; // Meeting point
+            }
+        }
+        return null; // No cycle
+    }
+
+    // Step 2: Find the start of the cycle
+    private ListNode findCycleStart(ListNode head, ListNode meetingPoint) {
+        ListNode slow1 = head;
+        ListNode slow2 = meetingPoint;
+
+        while (slow1 != slow2) {
+            slow1 = slow1.next;
+            slow2 = slow2.next;
+        }
+        return slow1;
     }
 }
 ```
