@@ -1,3 +1,5 @@
+This repository provides explanations of optimal algorithms for major LeetCode problems. Each solution includes a step-by-step thought process and alternative approaches where applicable.
+
 ## LinkedList
 - [141. Linked List Cycle]()
 - [142. Linked List Cycle II]()
