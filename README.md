@@ -74,7 +74,7 @@
 - [39. Combination Sum]()
 - [22. Generate Parentheses]()
 
-## その他
+## Others
 - [283. Move Zeroes]()
 - [252. Meeting Rooms]()
 - [253. Meeting Rooms II]()
