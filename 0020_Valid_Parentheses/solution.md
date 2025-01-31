@@ -89,8 +89,8 @@ class Solution {
 }
 ```
 
-### 番兵(Sentinel) を利用する方法
-
+### 解法2. 番兵(Sentinel) を利用する方法
+* 番兵をStackの底に置いておくことで、空かどうかの事前確認が不要になるという方法
 
 ```java
 class Solution {
