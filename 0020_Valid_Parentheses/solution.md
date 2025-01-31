@@ -58,11 +58,11 @@ class Solution {
 
 ```java
 class Solution {
-    public static final Set<Character> OPEN_BRACKETS = Set.of(
+    private static final Set<Character> OPEN_BRACKETS = Set.of(
         '(', '[', '{'
     );
     
-    public static final Map<Character, Character> BRACKET_CLOSE_OPEN = Map.of(
+    private static final Map<Character, Character> BRACKET_CLOSE_OPEN = Map.of(
         ')', '(', 
         ']', '[', 
         '}', '{'
@@ -89,16 +89,37 @@ class Solution {
 }
 ```
 
+#### 参考
+カッコペアのMap定数を、{key: 開く, val: 閉じる} の順に持たせた場合の書き方
+
+```java
+if (BRACKET_OPEN_CLOSE.containsKey(c)) {
+    stack.push(c);
+}
+else if (stack.isEmpty())
+{
+    return false;
+}
+else if (BRACKET_OPEN_CLOSE.get(stack.getLast()) == c)
+{
+    stack.pop();
+}
+else
+{
+    return false;
+}
+```
+
 ### 解法2. 番兵(Sentinel) を利用する方法
 * 番兵をStackの底に置いておくことで、空かどうかの事前確認が不要になるという方法
 
 ```java
 class Solution {
-    public static final Set<Character> OPEN_BRACKETS = Set.of(
+    private static final Set<Character> OPEN_BRACKETS = Set.of(
         '(', '[', '{'
     );
     
-    public static final Map<Character, Character> BRACKET_CLOSE_OPEN = Map.of(
+    private static final Map<Character, Character> BRACKET_CLOSE_OPEN = Map.of(
         ')', '(', 
         ']', '[', 
         '}', '{'
