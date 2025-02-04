@@ -69,11 +69,14 @@ public class Solution {
         int length = s.length();
         int index = 0;
         while (index < length && s.charAt(index) == ' ') index++;
+        if (index >= length) return 0; // All chars are space.
 
         // Step 2: Check for sign
         int sign = 1;
-        if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
-            sign = (s.charAt(index) == '-') ? -1 : 1;
+        if (s.charAt(index) == '-' || s.charAt(index) == '+') {
+            if (s.charAt(index) == '-') {
+                sign = -1;
+            }
             index++;
         }
 
@@ -186,11 +189,14 @@ public class Solution {
         int length = s.length();
         int index = 0;
         while (index < length && s.charAt(index) == ' ') index++;
+        if (index >= length) return 0; // All chars are space.
 
         // Step 2: Check for sign
         int sign = 1;
-        if (index < length && (s.charAt(index) == '-' || s.charAt(index) == '+')) {
-            sign = (s.charAt(index) == '-') ? -1 : 1;
+        if (s.charAt(index) == '-' || s.charAt(index) == '+') {
+            if (s.charAt(index) == '-') {
+                sign = -1;
+            }
             index++;
         }
 
