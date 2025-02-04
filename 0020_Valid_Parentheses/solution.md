@@ -74,15 +74,19 @@ class Solution {
         for (char c : s.toCharArray()) {
             if (OPEN_BRACKETS.contains(c)) {
                 stack.push(c);
+                continue;
             }
-            if (BRACKET_CLOSE_OPEN.containsKey(c)) {
-                if (stack.isEmpty()) {
-                    return false;
-                }
-                if (BRACKET_CLOSE_OPEN.get(c) != stack.pop()) {
-                    return false;
-                }
+            if (!BRACKET_CLOSE_OPEN.containsKey(c)) {
+                continue;
             }
+            if (stack.isEmpty()) {
+                return false;
+            }
+            if (BRACKET_CLOSE_OPEN.get(c) != stack.pop()) {
+                return false;
+            }
+
+            throw new IllegalArgumentException("Invalid character in input: " + c);
         }
         return stack.isEmpty();
     }
@@ -109,6 +113,14 @@ else
     return false;
 }
 ```
+
+* レビューの中で以下のようなコメントをいただいた
+    > LinkedList を使用する場合と比べ、 ArrayDeque はどのような利点がありますか？
+* LinkedListは隣のノードの参照を持つため1要素のメモリ消費が大きいという認識であったが、それに加えてArrayDequeの方が高速であるということは意識できていなかった
+    * ArrayDequeは内部的には動的配列を使っており、メモリ上で要素が連続して配置される。そのためキャッシュヒット率が高くアクセスが早い
+* このあたりは公式ドキュメントを読む癖をつけたい
+    * https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html
+
 
 ### 解法2. 番兵(Sentinel) を利用する方法
 * 番兵をStackの底に置いておくことで、空かどうかの事前確認が不要になるという方法
