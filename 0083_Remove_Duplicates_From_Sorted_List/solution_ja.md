@@ -1,6 +1,6 @@
 ## Problem
 
-// The URL of the problem
+https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 
 ## Step 1
 
@@ -11,8 +11,8 @@
 
 ### Approach
 
-時間計算量:
-空間計算量:
+時間計算量: O(n)
+空間計算量: O(1)
 
 - head からノードを走査。対象ノードの値が次のノードと同一であればリンクをさらにその次につなぎなおす。そうでない場合に対象ノードを次に移動
 
