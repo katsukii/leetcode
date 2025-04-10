@@ -69,5 +69,19 @@ class Solution {
 アクセプトされたら消すを 3 回連続できたら問題は OK。
 
 ```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode node = head;
 
+        while (node != null && node.next != null) {
+            if (node.val == node.next.val) {
+                node.next = node.next.next;
+                continue;
+            }
+            node = node.next;
+        }
+
+        return head;
+    }
+}
 ```
