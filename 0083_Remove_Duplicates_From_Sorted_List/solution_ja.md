@@ -14,7 +14,7 @@ https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 時間計算量: O(n)
 空間計算量: O(1)
 
-- head からノードを走査。対象ノードの値が次のノードと同一であればリンクをさらにその次につなぎなおす。そうでない場合に対象ノードを次に移動
+- head からノードを一つずつ走査。現在の対象ノードの値が次のノードと同一であればリンクをさらにその次につなぎなおす。そうでない場合に対象ノードを次に移動
 
 ```java
 class Solution {
@@ -41,8 +41,25 @@ class Solution {
 読みやすいことを意識する。
 他の解法も考えみる。
 
-```java
+- continue で 処理をスキップする方法。現在ノードを次に進める処理が else の中にある事に違和感があったのでこちらの方が見やすい
+  - https://github.com/shintaro1993/arai60/pull/6/files
 
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode node = head;
+
+        while (node != null && node.next != null) {
+            if (node.val == node.next.val) {
+                node.next = node.next.next;
+                continue;
+            }
+            node = node.next;
+        }
+
+        return head;
+    }
+}
 ```
 
 ## Step 3
