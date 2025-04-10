@@ -15,6 +15,7 @@ https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 空間計算量: O(1)
 
 - head からノードを一つずつ走査。現在の対象ノードの値が次のノードと同一であればリンクをさらにその次につなぎなおす。そうでない場合に対象ノードを次に移動
+- 主役のノードは一人しかいないので、シンプルに node と命名した
 
 ```java
 class Solution {
