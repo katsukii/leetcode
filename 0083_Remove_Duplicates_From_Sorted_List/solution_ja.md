@@ -63,6 +63,27 @@ class Solution {
 }
 ```
 
+- 二重ループでもいいかもというコメントをいただき以下を追加で実装
+  - https://github.com/katsukii/leetcode/pull/18#discussion_r2040702385
+- 直感的に二重ループは好ましくないと思って避けていたが、実態としては変わらなそう
+- また可読性の観点でもこちらの方が読み手に優しい気がする
+
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode node = head;
+
+        while (node != null) {
+            while (node.next != null && node.val == node.next.val) {
+                node.next = node.next.next;
+            }
+            node = node.next;
+        }
+        return head;
+    }
+}
+```
+
 ## Step 3
 
 今度は、時間を測りながら、もう一回書く。
