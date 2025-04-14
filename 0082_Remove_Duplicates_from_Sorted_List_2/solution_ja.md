@@ -74,7 +74,7 @@ class Solution {
 - 3 つのポインタを使用
   - node: メインでリストを一つずつ走査するノード。head からスタート
   - dummyHead: 番兵として元のリストの head の手前に配置する
-    - dummyHead を先頭に置くことで、本来の head 自体が削除対象となるケース（1->1->2 など）を考慮したループ処理が不要になる
+    - 番兵 を先頭に置くことで、本来の head 自体が削除対象となるケース（1->1->2 など）を考慮したループ処理が不要になる
   - lastUnique: 重複のない最後のノードを追跡。最初は dummyHead
 - リストを走査し一つ先のノードの値をチェックしていく。重複ノードはスキップ、重複なしノードには lastUnique と lastUnique.next をリンクさせる
 - 上記を繰り返すことで dummyHead.next が必ず重複のないリストの先頭になる
@@ -87,12 +87,12 @@ class Solution {
         ListNode lastUnique = dummyHead;
 
         while (node != null) {
-            if (node.next != null && node.val == node.next.val) {
-                while (node.next != null && node.val == node.next.val) {
+            if (node.next != null && node.val == node.next.val) { // Node is duplicate
+                while (node.next != null && node.val == node.next.val) { // Skip to last duplicated node
                     node = node.next;
                 }
-                lastUnique.next = node.next;
-            } else {
+                lastUnique.next = node.next; // Next of last duplicated node
+            } else { // Node is not Duplicate
                 lastUnique = lastUnique.next;
             }
             node = node.next;
@@ -105,11 +105,11 @@ class Solution {
 ### Approach 2
 
 - こちらは dummyHead と node の 2 人の登場人物だけで完了できる方法
-- Approach 1 とは逆の発想で、重複なしノードを次々とスキップし、その後重複が現れる限り一つ先につなぎなおす
+- Approach 1 とは逆の発想で、重複なしノードを一気にスキップし、その後重複が現れる限り一つ先につなぎなおすという方法
 - 以下を参考にした
   - https://github.com/5ky7/arai60/pull/5/files#diff-0c860cd754249868513e4f9054206317fa33d0f548fc3896ac2b3e11822fd852R160-R179
 - 感想
-  - 自らの無意識の選択をメタ認知した上で別の視点はないか探すという意識は常に持っておきたいと思いました。
+  - 自らの無意識の選択をメタ認知した上で別の視点はないか探すという意識は常に持っておきたいと思った
 
 ```java
 class Solution {
@@ -134,11 +134,38 @@ class Solution {
 }
 ```
 
+### その他参考にした PR
+
+- https://github.com/shintaro1993/arai60/pull/7/files
+- https://github.com/h1rosaka/arai60/pull/6/files
+- https://github.com/shintaroyoshida20/leetcode/pull/7/files
+
 ## Step 3
 
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを 3 回連続できたら問題は OK。
 
-```java
+Approach 1
 
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode node = head;
+        ListNode dummyHead = new ListNode(0, node);
+        ListNode lastUnique = dummyHead;
+
+        while (node != null) {
+            if (node.next != null && node.val == node.next.val) { // Node is duplicate
+                while (node.next != null && node.val == node.next.val) { // Skip to last duplicated node
+                    node = node.next;
+                }
+                lastUnique.next = node.next; // Next of last duplicated node
+            } else { // Node is not Duplicate
+                lastUnique = lastUnique.next;
+            }
+            node = node.next;
+        }
+        return dummyHead.next;
+    }
+}
 ```
