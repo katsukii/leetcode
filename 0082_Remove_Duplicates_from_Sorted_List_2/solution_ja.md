@@ -169,3 +169,70 @@ class Solution {
     }
 }
 ```
+
+## Step 4
+
+> dummyHead 置かないと分岐が増えるけれども、それでも解くことはできます。
+
+というコメントをいただいたので実装してみた。やはり
+
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        // Skip duplicated Node
+        while (head != null && head.next != null && head.val == head.next.val) {
+            int dupVal = head.val;
+            while (head != null && head.val == dupVal) {
+                head = head.next;
+            }
+        }
+
+        if (head == null) return null;
+
+        ListNode unique = head;
+        ListNode node = head.next;
+
+        while (node != null && node.next != null) {
+            if (node.val == node.next.val) {
+                int dupVal = node.val;
+                while (node != null && node.val == dupVal) {
+                    node = node.next;
+                }
+                unique.next = node;
+            } else {
+                unique.next = node;
+                unique = node;
+                node = node.next;
+            }
+        }
+
+        return head;
+    }
+}
+```
+
+再帰の実装
+
+- 面白い。思った以上にシンプルにいけた
+
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        return deleteDuplicatesHelper(head, -101); // -101: out of val
+    }
+
+    private ListNode deleteDuplicatesHelper(ListNode head, int duplicatedValue) {
+        if (head == null) {
+            return null;
+        }
+
+        // Start or Continue of Duplicate
+        if ((head.next != null && head.val == head.next.val) || head.val == duplicatedValue) {
+            return deleteDuplicatesHelper(head.next, head.val);
+        }
+
+        head.next = deleteDuplicatesHelper(head.next, -101); // No duplicatedValue
+        return head;
+    }
+}
+```
