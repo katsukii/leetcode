@@ -54,6 +54,9 @@ class Solution {
 読みやすいことを意識する。
 他の解法も考えみる。
 
+- まず ChatGPT で典型的な解法を調べてみて、Approach 1〜3 を確認。その上で PR をみていく
+- https://github.com/olsen-blue/Arai60/pull/57/files
+
 ### Approach 1. 開始・終了時刻それぞれのソート済配列を使用
 
 時間計算量: O(n log n) ※ 配列のソート
@@ -138,10 +141,16 @@ public class Solution {
 }
 ```
 
-### Approach 3. スイープラインを利用する方法
+### Approach 3. スイープライン+イベントベースの累積和方式
 
 時間計算量: O(n log n)
 空間計算量: O(n)
+
+- スイープラインとは
+
+  - 特定の「線」（または点）を、ある空間（たとえば平面や時間軸）上で一定方向に動かしながら、途中で発生する「イベント」を順次処理していくアルゴリズム設計の手法をこう呼ぶらしい
+  - この問題で初めて知った
+  - https://en.wikipedia.org/wiki/Sweep_line_algorithm#:~:text=In%20computational%20geometry%2C%20a%20sweep,critical%20techniques%20in%20computational%20geometry.
 
 - イベント変換: 各会議の開始時刻と終了時刻をそれぞれイベントとして配列に変換する
   - 開始イベント: +1 カウント（会議室使用開始）
@@ -184,6 +193,47 @@ public class Solution {
         return maxRooms;
     }
 }
+```
+
+### Approach 4. スイープライン+座標圧縮
+
+-
+
+```java
+        if (intervals == null || intervals.length == 0) {
+            return 0;
+        }
+
+        // 1. すべての時間点（開始と終了）を収集
+        Set<Integer> timePoints = new TreeSet<>(); // TreeSetを使うと自動的にソートされる
+        for (int[] interval : intervals) {
+            timePoints.add(interval[0]); // 開始時間
+            timePoints.add(interval[1]); // 終了時間
+        }
+
+        // 2. 時間点を配列に変換してインデックスにマッピング
+        Integer[] sortedTimes = timePoints.toArray(new Integer[0]);
+        Map<Integer, Integer> timeToIndex = new HashMap<>();
+        for (int i = 0; i < sortedTimes.length; i++) {
+            timeToIndex.put(sortedTimes[i], i);
+        }
+
+        // 3. 圧縮された座標系でのイベント配列を作成
+        int[] meetings = new int[sortedTimes.length];
+        for (int[] interval : intervals) {
+            meetings[timeToIndex.get(interval[0])]++; // 開始時間: +1
+            meetings[timeToIndex.get(interval[1])]--; // 終了時間: -1
+        }
+
+        // 4. 累積和を計算して最大値を見つける
+        int currentRooms = 0;
+        int maxRooms = 0;
+        for (int count : meetings) {
+            currentRooms += count;
+            maxRooms = Math.max(maxRooms, currentRooms);
+        }
+
+        return maxRooms;
 ```
 
 ## Step 3
