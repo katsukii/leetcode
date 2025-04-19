@@ -62,6 +62,14 @@ class Solution {
 }
 ```
 
+- https://github.com/katsukii/leetcode/pull/19/files#r2050477054
+  - 以下の方が直感的
+
+```java
+lastUnique.next = node;
+lastUnique = node;
+```
+
 ## Step 2
 
 他の方が描いたコードを見て、参考にしてコードを書き直してみる。
