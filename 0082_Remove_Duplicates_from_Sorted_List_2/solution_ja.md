@@ -134,6 +134,33 @@ class Solution {
 }
 ```
 
+- https://github.com/katsukii/leetcode/pull/19/files#r2050481915
+  - > node.next.next == null の場合に node = node.next; で node を進めたあと、 while (node.next != null) { でループを抜けようとしている点が、ややパズルに感じました。
+- 上記のフィードバックを受け、以下改良版
+
+```java
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        ListNode dummyHead = new ListNode(0, head);
+        ListNode node = dummyHead;
+
+        while (node.next != null && node.next.next != null) {
+            if (node.next.val != node.next.next.val) {
+                node = node.next;
+                continue;
+            }
+
+            int duplicateVal = node.next.val;
+            while (node.next != null && node.next.val == duplicateVal) {
+                node.next = node.next.next;
+            }
+        }
+
+        return dummyHead.next;
+    }
+}
+```
+
 ### その他参考にした PR
 
 - https://github.com/shintaro1993/arai60/pull/7/files
