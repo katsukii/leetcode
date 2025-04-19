@@ -125,6 +125,73 @@ class Solution {
 }
 ```
 
+### Approach 4 座標圧縮、差分配列＋累積和を使う方法
+
+- https://github.com/katsukii/leetcode/pull/20/files#r2051496046
+  - > 座標圧縮と組み合わせると、increment の回数が減らせます。
+- Approach 3 へのこのコメントを受けて調べてみた
+
+- 会議の開始を+1, 終了を-1 として差分配列に記録。最後に累積和を走査する
+- これにより同時開催中の会議数がわかる
+
+#### 座標圧縮（Coordinate Compression）とは
+
+- 任意の配列の大きさの順序を保ったまま、その値を小さくする（圧縮する）
+- 例えば、以下のように与えられた数列を大小関係だけを抽出する場合:
+  - 入力: 1 10 5 32 99 8 10
+  - 出力: 0 3 1 4 5 2 3
+- 値の範囲を小さくすることで、その後の処理にかかる時間を短縮できる場合に使用する
+- 入力 → 出力 となるように Map(Dictionary)を使って管理する
+
+#### 差分配列（Difference Array）とは
+
+- ある元の配列の「隣り合う要素の差分」をとって別の配列として保持し、それを使って区間加算や累積和による高速な更新・取得を可能にするというのが一般的な定義らしい
+- ここでは、開始: +1, 終了: -1 のマーカーをタイムポイント同士の差分（= 進行中の会議数）として管理
+
+```java
+class Solution {
+    public boolean canAttendMeetings(int[][] intervals) {
+        // 1. Collect all times
+        List<Integer> times = new ArrayList<>();
+        for (int[] interval : intervals) {
+            times.add(interval[0]); // Start
+            times.add(interval[1]); // End
+        }
+
+        // 2. Remove duplicates and sort
+        Set<Integer> uniqueTimes = new TreeSet<>(times);
+        List<Integer> sortedTimes = new ArrayList<>(uniqueTimes);
+
+        // 3. Cordinate compression
+        Map<Integer,Integer> compressedTimes = new HashMap<>();
+        for (int i = 0; i < sortedTimes.size(); i++) {
+            compressedTimes.put(sortedTimes.get(i), i);
+        }
+
+        // 4. Difference array
+        int[] diff = new int[sortedTimes.size() + 1];
+
+        // 5. Set +1 / -1
+        for (int[] interval : intervals) {
+            int start = compressedTimes.get(interval[0]);
+            int end = compressedTimes.get(interval[1]);
+            diff[start] += 1;
+            diff[end] -= 1;
+        }
+
+        // 6. Check prefix sum, which means ongoing meetings.
+        int ongoing = 0;
+        for (int i = 0; i < sortedTimes.size(); i++) {
+            ongoing += diff[i];
+            if (ongoing > 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
 ## Step 3
 
 今度は、時間を測りながら、もう一回書く。
