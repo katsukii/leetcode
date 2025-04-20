@@ -54,8 +54,7 @@ class Solution {
 読みやすいことを意識する。
 他の解法も考えみる。
 
-- まず ChatGPT で典型的な解法を調べてみて、Approach 1〜3 を確認。その上で PR をみていく
-- https://github.com/olsen-blue/Arai60/pull/57/files
+- ## https://github.com/olsen-blue/Arai60/pull/57/files
 
 ### Approach 1. 開始・終了時刻それぞれのソート済配列を使用
 
@@ -111,6 +110,9 @@ class Solution {
 - 最小ヒープを使って**現在進行中の**会議の終了時刻を追跡
 - 新しい会議が始まる時、ヒープから終了済会議を取り除く
 - ヒープのサイズが必要な会議室の数になる
+- 参考
+  - https://github.com/Ryotaro25/leetcode_first60/pull/61/files#diff-92e9dbf517861f420e88aa4cedcec79ceabc8fc133bc619d972cf04f4d3fc280R1
+  - わかりやすい。Heap はいろんなところで見かけるので慣れておきたい
 
 ```java
 public class Solution {
@@ -141,10 +143,15 @@ public class Solution {
 }
 ```
 
-### Approach 3. スイープライン+イベントベースの累積和方式
+### Approach 3. スイープライン+累積和（イベントソート版）
 
 時間計算量: O(n log n)
 空間計算量: O(n)
+
+- https://github.com/olsen-blue/Arai60/pull/57/files#diff-a0ae933995d3a32d66b233c1e96d7f1bbe7ff33e80eb0997d04a4806ba5d2be5R112-R135
+
+  - こちらを参考に作成した
+  - 考え方は分かりやすくて好みだが、Java だと行数が増えるため実践では選びづらい
 
 - スイープラインとは
 
@@ -195,45 +202,53 @@ public class Solution {
 }
 ```
 
-### Approach 4. スイープライン+座標圧縮
+### Approach 4. スイープライン+累積和（座標圧縮 + 差分配列版）
 
--
+- Approach 3 の亜種
+- 252. Meeting Rooms の Approach 4 とほぼ同一の手法。返り値が違うだけ
+  - https://github.com/katsukii/leetcode/pull/20
 
 ```java
-        if (intervals == null || intervals.length == 0) {
-            return 0;
-        }
-
-        // 1. すべての時間点（開始と終了）を収集
-        Set<Integer> timePoints = new TreeSet<>(); // TreeSetを使うと自動的にソートされる
+public class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        // 1. Collect all times
+        List<Integer> times = new ArrayList<>();
         for (int[] interval : intervals) {
-            timePoints.add(interval[0]); // 開始時間
-            timePoints.add(interval[1]); // 終了時間
+            times.add(interval[0]); // Start
+            times.add(interval[1]); // End
         }
 
-        // 2. 時間点を配列に変換してインデックスにマッピング
-        Integer[] sortedTimes = timePoints.toArray(new Integer[0]);
-        Map<Integer, Integer> timeToIndex = new HashMap<>();
-        for (int i = 0; i < sortedTimes.length; i++) {
-            timeToIndex.put(sortedTimes[i], i);
+        // 2. Remove duplicates and sort
+        Set<Integer> uniqueTimes = new TreeSet<>(times);
+        List<Integer> sortedTimes = new ArrayList<>(uniqueTimes);
+
+        // 3. Cordinate compression
+        Map<Integer,Integer> compressedTimes = new HashMap<>();
+        for (int i = 0; i < sortedTimes.size(); i++) {
+            compressedTimes.put(sortedTimes.get(i), i);
         }
 
-        // 3. 圧縮された座標系でのイベント配列を作成
-        int[] meetings = new int[sortedTimes.length];
+        // 4. Difference array
+        int[] diff = new int[sortedTimes.size() + 1];
+
+        // 5. Set +1 / -1
         for (int[] interval : intervals) {
-            meetings[timeToIndex.get(interval[0])]++; // 開始時間: +1
-            meetings[timeToIndex.get(interval[1])]--; // 終了時間: -1
+            int start = compressedTimes.get(interval[0]);
+            int end = compressedTimes.get(interval[1]);
+            diff[start] += 1;
+            diff[end] -= 1;
         }
 
-        // 4. 累積和を計算して最大値を見つける
-        int currentRooms = 0;
+        // 6. Check prefix sum, which means ongoing meetings.
+        int roomsInUse = 0;
         int maxRooms = 0;
-        for (int count : meetings) {
-            currentRooms += count;
-            maxRooms = Math.max(maxRooms, currentRooms);
+        for (int i = 0; i < sortedTimes.size(); i++) {
+            roomsInUse += diff[i];
+            maxRooms = Math.max(maxRooms, roomsInUse);
         }
-
         return maxRooms;
+    }
+}
 ```
 
 ## Step 3
@@ -241,6 +256,22 @@ public class Solution {
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを 3 回連続できたら問題は OK。
 
-```java
+- Approach 2 の minHeap で解いた
 
+```java
+public class Solution {
+    public int minMeetingRooms(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+
+        PriorityQueue<Integer> minEndTimeHeap = new PriorityQueue<>();
+        minEndTimeHeap.add(intervals[0][1]); // first mtg
+        for (int i = 1; i < intervals.length; i++) {
+            if (minEndTimeHeap.peek() <= intervals[i][0]) {
+                minEndTimeHeap.poll();
+            }
+            minEndTimeHeap.add(intervals[i][1]);
+        }
+        return minEndTimeHeap.size();
+    }
+}
 ```
