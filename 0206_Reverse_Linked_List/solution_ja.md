@@ -57,13 +57,13 @@ class Solution {
   - > 先頭の前にダミーをつけて、先頭の次のノードをダミーの後ろに挿入していく方法
   - > ひっくりかえす前の鎖と後の鎖を用意して、前のやつの先頭を後のやつの先頭につけていく方法
 
-### Approach 2. 順番に走査しながら逆接続する方法
+### Approach 2. リンクにフォーカスし順番に走査しながら逆接続する方法
 
 時間計算量: O(n)
 空間計算量: O(1)
 
 - リンクを順番にひっくり返していく方法
-- 単に prev, next だと再接続前か後かがわかりづらかったので、old とつけた。この命名がレビュアーにどう思われるかは気になるところ
+- 単に next だと再接続前か後かがわかりづらかったので、old とつけた。この命名がレビュアーにどう思われるかは気になるところ
 
 ```java
 class Solution {
@@ -72,20 +72,19 @@ class Solution {
             return head;
         }
 
-        ListNode oldPrev = null;
+        ListNode prev = null;
         ListNode node = head;
-        ListNode oldNext = null;
 
         while (node != null) {
             // Save node and reverse
-            oldNext = node.next;
-            node.next = oldPrev;
+            ListNode oldNext = node.next;
+            node.next = prev;
             // Proceed nodes
-            oldPrev = node;
+            prev = node;
             node = oldNext;
         }
 
-        return oldPrev;  // new head
+        return prev;  // new head
     }
 }
 ```
@@ -182,6 +181,27 @@ class Solution {
 今度は、時間を測りながら、もう一回書く。
 アクセプトされたら消すを 3 回連続できたら問題は OK。
 
-```java
+- Approach 2 の方法で解いた。慣れたら oldNext とか書くより普通に next でもいい気がしてきた
+- でも初見だとやはりわかりづらい気もする。悩ましい
 
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode prev = null;
+        ListNode node = head;
+
+        while (node != null) {
+            ListNode oldNext = node.next;
+            node.next = prev;
+            prev = node;
+            node = oldNext;
+        }
+
+        return prev;
+    }
+}
 ```
