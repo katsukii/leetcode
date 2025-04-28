@@ -42,6 +42,64 @@ class Solution {
 }
 ```
 
+- https://github.com/katsukii/leetcode/pull/22#discussion_r2060338702
+  - > reverseHead を宣言せず、 return nodes.get(nodes.size() - 1); としてもよいと思いました。
+  - たしかにわざわざ宣言する必要はなさそう
+
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        ListNode node = head;
+        List<ListNode> nodes = new ArrayList<>();
+        while (node != null) {
+            nodes.add(node);
+            node = node.next;
+        }
+
+        for (int i = nodes.size() - 1; i > 0; i--) {
+            node = nodes.get(i);
+            node.next = nodes.get(i - 1);
+        }
+        nodes.get(0).next = null;
+        return nodes.get(nodes.size() - 1);
+    }
+}
+```
+
+- https://github.com/katsukii/leetcode/pull/22#discussion_r2055140421
+  - Stack の方がいいかもとのコメント。仰るとおりだと思います。
+
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        ListNode node = head;
+        Deque<ListNode> nodes = new ArrayDeque<>();
+        nodes.push(null);
+        while (node != null) {
+            nodes.push(node);
+            node = node.next;
+        }
+
+        ListNode reverseHead = nodes.pop();
+        node = reverseHead;
+        while (!nodes.isEmpty()) {
+            node.next = nodes.pop();
+            node = node.next;
+        }
+
+        return reverseHead;
+    }
+}
+```
+
 ## Step 2
 
 他の方が描いたコードを見て、参考にしてコードを書き直してみる。
@@ -89,6 +147,31 @@ class Solution {
         }
 
         return prev;  // new head
+    }
+}
+```
+
+- https://github.com/katsukii/leetcode/pull/22#discussion_r2055141902
+  - prev を lastSeen にするのはどうかとコメントいただいた。良さそう。
+
+```java
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode lastSeen = null;
+        ListNode node = head;
+
+        while (node != null) {
+            ListNode oldNext = node.next;
+            node.next = lastSeen;
+            lastSeen = node;
+            node = oldNext;
+        }
+
+        return lastSeen;
     }
 }
 ```
