@@ -36,7 +36,7 @@ class KthLargest {
     public int add(int val) {
         if (minHeap.size() < k) {
             minHeap.offer(val); // add
-        } else if (val > minHeap.peek()) {
+        } else if (minHeap.peek() < val) {
             minHeap.poll(); // remove root
             minHeap.offer(val);
         }
@@ -148,5 +148,26 @@ class KthLargest {
 アクセプトされたら消すを 3 回連続できたら問題は OK。
 
 ```java
+class KthLargest {
+    private PriorityQueue<Integer> scores;
+    private final int k;
 
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        this.scores = new PriorityQueue<>();
+        for (int num : nums) {
+            this.add(num);
+        }
+    }
+
+    public int add(int val) {
+        if (scores.size() < k) {
+            scores.offer(val);
+        } else if (scores.peek() < val) {
+            scores.poll();
+            scores.offer(val);
+        }
+        return scores.peek();
+    }
+}
 ```
