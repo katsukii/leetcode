@@ -22,7 +22,8 @@ class Solution {
     public int[] topKFrequent(int[] nums, int k) {
         HashMap<Integer, Integer> numCounts = new HashMap<>();
         for (int num : nums) {
-            numCounts.put(num, numCounts.getOrDefault(num, 0) + 1);
+            int count = numCounts.getOrDefault(num, 0) + 1;
+            numCounts.put(num, count);
         }
         PriorityQueue<int[]> countHeap = new PriorityQueue<>(
             (a, b) -> b[1] - a[1] // Max-heap
@@ -38,7 +39,6 @@ class Solution {
         }
         return result;
     }
-}
 ```
 
 ## Step 2
