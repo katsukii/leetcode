@@ -171,3 +171,46 @@ class KthLargest {
     }
 }
 ```
+
+## Step 4
+
+コメントいただいて実装した
+
+### Approach 3.ソート配列
+
+- https://github.com/katsukii/leetcode/pull/23/files#r2065369258
+  - > 最初はソートで k 番目のスコアを求める、それを保持しつつ新しいスコアと比べて更新するとかでもこの問題は問題ないのでしょうか
+- たしかこれでも解法としてありえそう
+
+- コンストラクタ: 空の配列をメンバ変数として用意し、for 文で nums の要素数分 add を呼び出す
+- add: 引数の val を配列の適切な位置に挿入したあと要素数が k 個になるように調整し index 0 を返す
+  　　- `Collections.binarySearch()` でソート済配列のどの位置に挿入されるか特定可能
+
+```java
+class KthLargest {
+    private final int k;
+    private List<Integer> sortedList;
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        this.sortedList = new ArrayList<>();
+
+        for (int num : nums) {
+            add(num);
+        }
+    }
+
+    public int add(int val) {
+        int insertPosition = Collections.binarySearch(sortedList, val);
+        if (insertPosition < 0) { // if val isn't in sortedList
+            insertPosition = -(insertPosition + 1);
+        }
+
+        sortedList.add(insertPosition, val);
+
+        if (sortedList.size() > k) {
+            sortedList.remove(0);
+        }
+        return sortedList.get(0);
+    }
+}
+```
