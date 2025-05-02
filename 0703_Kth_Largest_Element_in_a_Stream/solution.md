@@ -139,9 +139,7 @@ class KthLargest {
             int kthScore = scores.firstKey();
             if (val > kthScore) {
                 scores.put(val, scores.getOrDefault(val, 0) + 1);
-                scoreCount++;
                 updateScoreCount(kthScore);
-                scoreCount--;
             }
         }
         return scores.firstKey();
