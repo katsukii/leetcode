@@ -46,6 +46,22 @@ class KthLargest {
 }
 ```
 
+上記に対していただいたコメント
+
+- https://github.com/katsukii/leetcode/pull/23/files#r2068473153
+  - > この if-else if 文を読んでいて、else のケースが大丈夫なのかなというのを考えるのに少し時間が取られたのでもう少し素直に書ける余地があるかなと思います。
+  - > とりあえず queu に突っ込んでしまって、要素がサイズを超えていれば、減らしてあげるみたいな感じのほうがシンプルかなと個人的には思います。
+  - ```java
+        public int add(int val) {
+            scores.offer(val);
+            if (scores.size() > k) {
+                scores.poll();
+            }
+            return scores.peek();
+        }
+    ```
+  - たしかにこちらの方がわかりやすい
+
 ## Step 2
 
 他の方が描いたコードを見て、参考にしてコードを書き直してみる。
@@ -141,6 +157,23 @@ class KthLargest {
     }
 }
 ```
+
+上記に対しいただいたコメント
+
+- https://github.com/katsukii/leetcode/pull/23/files#r2065049233
+
+  - > 自分なら numScores と名付けると思います。チームの平均的な書き方に合わせることをお勧めいたします。
+  - たしかに個数を表すなら num◯◯ の方が共通認識としてわかりやすいのはあるかもしれない
+
+- https://github.com/katsukii/leetcode/pull/23/files#r2067722954
+  - > `scores.put(val, scores.getOrDefault(val, 0) + 1);`
+  - > 私はこの put と getOrDefault を一行に書くのは好みではないです。
+  - > val を 2 回書かないならば compute を使うようなのもありますが、素直に 2 行にするのも一つです。
+  - たしかに 2 行にした方が見やすい。今後気をつける
+    - ```java
+      int count = scores.getOrDefault(val, 0) + 1;
+      scores.put(val, count);
+      ```
 
 ## Step 3
 
