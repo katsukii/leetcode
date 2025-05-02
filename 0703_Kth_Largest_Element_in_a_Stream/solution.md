@@ -178,6 +178,9 @@ class KthLargest {
 
 ### Approach 3.ソート配列
 
+時間計算量: O(n log n)
+空間計算量: O(k)
+
 - https://github.com/katsukii/leetcode/pull/23/files#r2065369258
   - > 最初はソートで k 番目のスコアを求める、それを保持しつつ新しいスコアと比べて更新するとかでもこの問題は問題ないのでしょうか
 - たしかこれでも解法としてありえそう
