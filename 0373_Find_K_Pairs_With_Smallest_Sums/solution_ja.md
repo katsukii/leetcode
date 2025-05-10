@@ -174,6 +174,7 @@ class Solution {
 - ポイントは、常に候補の中から最小のマスが探索対象となること。このため合理的な順で探索が進められる
 
 - コメント: Python の tuple みたいな Pair というクラスが Java にあるのを初めて知った
+- ※ Java8 までは標準だったが、それ以降外された模様。
 
 ```java
 class Solution {
@@ -203,6 +204,23 @@ class Solution {
     }
 }
 ```
+
+- https://github.com/katsukii/leetcode/pull/25/files#r2081636378
+  > 自分だったら、こう書くかなと思いました。
+  >
+  > この while 文が、result という配列がサイズ K になるまで、要素を追加する
+  > というのが伝わりやすくなるためです。
+  >
+  > また、sumMinHeap が empty になるのは、異常系だと思うので、
+  > if/break にしたほうが読みやすいと思いました。
+  >
+  > ```java
+  >      while (result.size() < k) {
+  >          if (sumMinHeap.isEmpty()) {
+  >              break
+  >          }
+  >      }
+  > ```
 
 ## Step 3
 
